@@ -1,0 +1,157 @@
+{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "NRRU COMPUTER Service Center",
+        "color": "#1DB446",
+        "size": "md",
+        "weight": "bold"
+      },
+      {
+        "type": "text",
+        "text": "ได้รับแจ้งจาก",
+        "weight": "bold",
+        "size": "xxl",
+        "margin": "md"
+      },
+      {
+        "type": "text",
+        "text": "'.$data["notifyBy"].'",
+        "size": "sm",
+        "color": "#555555",
+        "wrap": true,
+        "margin": "sm"
+      },
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "xxl",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "โทรศัพท์:",
+                "size": "md",
+                "color": "#777777",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "'.$data["telNo"].'",
+                "size": "md",
+                "color": "#777777",
+                "align": "end"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "วันที่แจ้ง:",
+                "size": "md",
+                "color": "#777777",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "'.$data["createDate"].'",
+                "size": "md",
+                "color": "#777777",
+                "align": "end"
+              }
+            ]
+          },
+
+           {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "ประเภทงาน:",
+                "size": "md",
+                "color": "#777777",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "'.$data["issueType"].'",
+                "size": "md",
+                "color": "#777777",
+                "align": "end"
+              }
+            ]
+          },
+
+           {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "มอบหมายให้:",
+                "size": "md",
+                "color": "#777777",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "'.$staffName.'",
+                "size": "md",
+                "color": "#777777",
+                "align": "end"
+              }
+            ]
+          },
+
+
+        ]
+      },
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+
+       {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+             
+              {
+                "type": "text",
+                "text": "'.$data["issueDetail"].'",
+                "size": "md",
+                "color": "#777777",
+                "align": "end"
+              }
+            ]
+          }
+
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+      
+    ]
+  },
+  "styles": {
+    "footer": {
+      "separator": true
+    }
+  }
+}
