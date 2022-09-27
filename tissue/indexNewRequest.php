@@ -107,7 +107,7 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
       <div id="dvRequest">
           <form role='form'>
 <div class="box-body">
-<div class="col-sm-4">
+
 
     
     <div class='form-group'>
@@ -124,14 +124,14 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
         <td >
           <input type="text" 
               class="form-control" id='obj_floorNo' 
-              placeholder='floorNo'>
+              placeholder='<?= $objLbl->getLabel("t_issue","building","th")?>'>
         </td>
         <td>-
         </td>
         <td width="39%">
           <input type="text" 
               class="form-control" id='obj_roomNo' 
-              placeholder='roomNo'>
+              placeholder='<?= $objLbl->getLabel("t_issue","roomNo","th")?>'>
         </td>
         </tr> 
         </table>
@@ -147,37 +147,42 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
         <td>
           <input type="text" 
               class="form-control" id='obj_telNo' 
-              placeholder='telNo'>
+              placeholder='<?=$objLbl->getLabel("t_issue","telNo","th")?>'>
         </td>
         <td>-
         </td>
         <td>
           <input type="text" 
               class="form-control" id='obj_lineNo' 
-              placeholder='lineNo'>
+              placeholder='<?=$objLbl->getLabel("t_issue","lineNo","th")?>'>
         </td>
         </tr>
         </table>
       </div>
     </div>
+
     
     <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","createDate","th").":" ?></label>
-      <div class="col-sm-12">
+      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","createDate","th").":" ?>/<?php echo $objLbl->getLabel("t_issue","issueType","th").":" ?></label>
+      <div class="col-sm-3">
         <div class="input-group date">
         <div class="input-group-addon">
         <i class="fa fa-calendar"></i>
         </div>
-        <input type="date" class="form-control" id="obj_createDate" value="<?=date('Y-m-d')?>">
+        <input type="text" disabled class="form-control" id="obj_createDate" value="<?=date('Y-m-d')?>">
         </div>
       </div>
-    </div>
-    <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","issueType","th").":" ?></label>
-      <div class="col-sm-12">
-
+      <div class="col-sm-9">
         <select class="form-control" id="obj_issueType">
         </select>
+      </div>
+    </div>
+   
+      <div class='form-group'>
+      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","notifyBy","th").":" ?></label>
+      <div class="col-sm-12">
+      
+          <label  class="form-control" id='obj_notifyBy' ><?=$_SESSION["FullName"]?></label>
       </div>
     </div>
     <div class='form-group'>
@@ -190,14 +195,7 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
         </div>
       </div>
     </div>
-    <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","notifyBy","th").":" ?></label>
-      <div class="col-sm-12">
-        <input type="text" 
-              class="form-control" id='obj_notifyBy' 
-              value='<?php echo $_SESSION["FullName"]; ?>'>
-      </div>
-    </div>
+  
     <div class='form-group'><div class="col-sm-12"><hr></div></div>
       <div class='form-group'>
         <div class="col-sm-12">
@@ -208,13 +206,18 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
   
 
 </div>
-<div class="col-sm-8">
+
+
+
+<div class="box box-success">
+ 
   <table id="tbStaffRequest" class="table table-bordered table-hover">
     
   </table>
 
+
 </div>
-</div>
+
 </form>
 
       </div>
@@ -322,16 +325,16 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
 
   function listBuilding(){
     var url="<?=$rootPath?>/tbuilding/listBuilding.php";
-    setDDLPrefix(url,"#obj_building","***Building***");
+    setDDLPrefix(url,"#obj_building","***เลือกอาคาร***");
   }
 
   function listIssueType(){
     var url="<?=$rootPath?>/tissuetype/getData.php";
-    setDDLPrefix(url,"#obj_issueType","***Type***");
+    setDDLPrefix(url,"#obj_issueType","***ประเภทงาน***");
   }
 
   function displayIssue(){
-    var url="<?=$rootPath?>/tissue/displayDataByStaff.php?userCode=<?=$userCode?>";
+    var url="<?=$rootPath?>/tissue/displayDataByStaffW.php?userCode=<?=$userCode?>";
     $("#tbStaffRequest").load(url);
   }
 
@@ -342,7 +345,6 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
   }
 
   function sendNotify(id){
-        //sendStream(id);
         url="<?=$rootPath ?>/lineBot/notifyWithPicture.php?id="+id;
         executeData(url,jsonObj,false);
   }
@@ -365,11 +367,10 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
       createDate:$("#obj_createDate").val(),
       issueType:$("#obj_issueType").val(),
       issueDetail:$("#obj_issueDetail").val(),
-      notifyBy:$("#obj_notifyBy").val(),
+      notifyBy:$("#obj_notifyBy").text(),
       status:'01'
     }
     var jsonData=JSON.stringify (jsonObj);
-    console.log(jsonData);
     var flag=executeData(url,jsonObj,false);
     var id= getLastId();
     sendNotify(id);
@@ -388,7 +389,7 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
       createDate:$("#obj_createDate").val(),
       issueType:$("#obj_issueType").val(),
       issueDetail:$("#obj_issueDetail").val(),
-      notifyBy:$("#obj_notifyBy").val(),
+      notifyBy:$("#obj_notifyBy").text(),
       id:$("#obj_id").val()
     }
     var jsonData=JSON.stringify (jsonObj);
@@ -418,10 +419,52 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
       $("#obj_lineNo").val("");
       $("#obj_issueType").val("");
       $("#obj_issueDetail").val("");
-      $("#obj_notifyBy").val("");
+      $("#obj_notifyBy").text("");
   }
 
   function saveIssue(){
+
+
+     if($("#obj_building").val()==="" || $("#obj_floorNo").val()===""|| $("#obj_roomNo").val()===""){
+          swal.fire({
+          title: "กรุณาระบุอาคาร ชั้น และห้องให้ครบถ้วน",
+          type: "error",
+          buttons: [false, "ปิด"],
+          dangerMode: true,
+        });
+        return;
+    }
+    
+    if($("#obj_telNo").val()==="" && $("#obj_lineNo").val()===""){
+          swal.fire({
+          title: "กรุณากรอกเบอร์โทรศัพท์หรือ LINE ID",
+          type: "error",
+          buttons: [false, "ปิด"],
+          dangerMode: true,
+        });
+        return;
+    }
+
+     if($("#obj_issueType").val()===""){
+          swal.fire({
+          title: "กรุณาระบุประเภทงาน",
+          type: "error",
+          buttons: [false, "ปิด"],
+          dangerMode: true,
+        });
+        return;
+    }
+
+    if($("#obj_issueDetail").val()===""){
+          swal.fire({
+          title: "กรุณาระบุรายละเอียดของปัญหา",
+          type: "error",
+          buttons: [false, "ปิด"],
+          dangerMode: true,
+        });
+        return;
+    }
+
     var flag;
     flag=true;
     if(flag==true){
@@ -441,7 +484,6 @@ $userCode=isset($_SESSION["UserCode"])?$_SESSION["UserCode"]:"Admin";
       clearIssue();
     });
       
-     //loadInput();
     }
     else{
       swal.fire({
@@ -478,7 +520,7 @@ function readOneIssue(id){
       $("#obj_createDate").val(data.createDate);
       $("#obj_issueType").val(data.issueType);
       $("#obj_issueDetail").val(data.issueDetail);
-      $("#obj_notifyBy").val(data.notifyBy);
+      $("#obj_notifyBy").text(data.notifyBy);
       $("#obj_id").val(data.id);
       getIssueDetail(data.id);
     }
@@ -486,7 +528,7 @@ function readOneIssue(id){
 function confirmDelete(id){
     swal.fire({
       title: "คุณต้องการที่จะลบข้อมูลนี้หรือไม่?",
-      text: "***กรุณาตรวจสอบข้อมูลให้ครบถ้วนก่อนกดปุ่มตกลง",
+      text: "***กรุณาตรวจสอบข้อมูลให้ครบถ้วนก่อนกดปุ่มตกลง***",
       type: "warning",
       confirmButtonText: "ตกลง",
       cancelButtonText: "ยกเลิก",
@@ -547,7 +589,6 @@ function clearData(){
   function displayInprogress(issueId){
     $("#modal-inprogress").modal("toggle");
     var url="<?=$rootPath?>/tissue/displayInprogress.php?issueId="+issueId;
-    console.log(url);
     $("#dvInprogress").load(url);
    
   }
