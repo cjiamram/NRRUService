@@ -160,6 +160,21 @@ class  tstaff{
 		return $stmt;
 	}
 
+	public function getStaffByIssueType($issueType){
+		$query="SELECT  
+			id,
+			username,
+			CONCAT(prefixname,' ',staffname,' ',staffsurname) AS staff
+		FROM t_staff WHERE isValid=1 
+		AND issueType LIKE :issueType
+		ORDER BY username";
+		$stmt = $this->conn->prepare($query);
+		$issueType="%{$issueType}%";
+		$stmt->bindParam(":issueType",$issueType);
+		$stmt->execute();
+		return $stmt;
+	}
+
 	function delete(){
 		$query='DELETE FROM t_staff WHERE id=:id';
 		$stmt = $this->conn->prepare($query);

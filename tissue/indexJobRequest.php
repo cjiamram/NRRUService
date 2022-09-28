@@ -21,7 +21,7 @@
         <small>>><?php echo $objLbl->getLabel("t_issue","assignJob","th").":" ?></small>
       </h1>
       <ol class="breadcrumb">
-        <input type="button" id="btnSearch"  class="btn btn-success pull-right"  value="ค้นหาข้นสูง">
+        <!--<input type="button" id="btnSearch"  class="btn btn-success pull-right"  value="ค้นหาข้นสูง">-->
       </ol>
     </section>
 
@@ -56,7 +56,7 @@
 
 
    <div class="modal fade" id="modal-input">
-     <div class="modal-dialog" id="dvInput" style="width:800px" >
+     <div class="modal-dialog" id="dvInput" style="width:650px" >
       <div class="modal-content">
           <div class="box-header with-border">
                 <button type="button" class="close"  aria-label="Close">
@@ -99,14 +99,14 @@
 
  function displayData(){
  
-    var url="<?=$rootPath?>/tissue/displayRequestByStatus.php?status=01";
+    var url="<?=$rootPath?>/tissue/displayRequestByStatusW.php?status=01";
     $("#tbJobRequest").load(url);
  }
 
 
  function displayAdvanceData(){
  
-    var url="<?=$rootPath?>/tissue/displayRequestByStatus.php?status=01&keyWord="+$("#obj_keyWord").val()+"&issueType="+$("#obj_issueType").val()+"&requestDate="+$("#obj_requestDate").val()+"&isSearch=true";
+    var url="<?=$rootPath?>/tissue/displayRequestByStatusW.php?status=01&keyWord="+$("#obj_keyWord").val()+"&issueType="+$("#obj_issueType").val()+"&requestDate="+$("#obj_requestDate").val()+"&isSearch=true";
     $("#tbJobRequest").load(url);
  }
 
@@ -155,6 +155,10 @@
       $("#obj_notifyBy").val(data.notifyBy);
       $("#obj_IssueDetail").html(data.issueDetail);
       $("#obj_requestDate").val(data.createDate);
+      $("#lblTelNo").text(data.telNo);
+      $("#lblLineNo").text(data.lineNo);
+      $("#lblLocation").text(data.location);
+      $("#obj_issueType").val(data.issueType);
    }
  }
 

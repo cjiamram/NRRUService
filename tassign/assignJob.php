@@ -19,43 +19,58 @@ $rootPath=$cnf->path;
 <link rel="stylesheet" href="<?=$rootPath?>/bower_components/select2/dist/css/select2.min.css">
 <script src="<?=$rootPath?>/bower_components/select2/dist/js/select2.full.min.js"></script>
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-12">
 <div class="box box-warning">
     <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","issueDetail","th").":" ?></label>
+      <h4><label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","issueDetail","th").":" ?></label><h4>
       <div class="col-sm-12">
    
-      <div id="obj_IssueDetail" style="min-height: 200px;overflow: scroll;"></div>
+      <div id="obj_IssueDetail" style="min-height: 100px;overflow: scroll;"></div>
       </div>
     </div>
     <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","notifyBy","th").":" ?></label>
-      <div class="col-sm-12">
+      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","notifyBy","th").":" ?>/วันที่แจ้ง :</label>
+      <div class="col-sm-6">
       <input type="text" id="obj_notifyBy" class="form-control" disabled>
       </div>
-    </div>
-    <div class='form-group'>
-      <label class="col-sm-12"><?php echo $objLbl->getLabel("t_issue","requestDate","th").":" ?></label>
-      <div class="col-sm-12">
+      <div class="col-sm-6">
       <input type="text" id="obj_requestDate" class="form-control" disabled>
       </div>
     </div>
+    
+    
+    <div class='form-group'>
+      <label class="col-sm-12">โทรศัพท์/Line ID  :</label>
+      <div class="col-sm-6">
+        <label id="lblTelNo" class="form-control"></label>
+      </div>
+      <div class="col-sm-6">
+        <label id="lblLineNo" class="form-control"></label>
+      </div>
+    </div>
+
+    <div class='form-group'>
+      <label class="col-sm-12">ตำแหน่ง-ที่ตั้ง :/<?php echo $objLbl->getLabel("t_assign","assignFrom","th").":" ?></label>
+      <div class="col-sm-6">
+        <label id="lblLocation" class="form-control"></label>
+      </div>
+      <div class="col-sm-6">
+
+            <label type="label" class="form-control" id="obj_assignFrom" ><?=$UserName?></label>
+      </div>
+    </div>
+
+    
 	
-		<div class='form-group'>
-			<label class="col-sm-12"><?php echo $objLbl->getLabel("t_assign","assignFrom","th").":" ?></label>
-			<div class="col-sm-12">
-				<input type="text" value="<?php echo $UserName; ?>" 
-							class="form-control" id='obj_assignFrom' 
-							placeholder='assignFrom'>
-			</div>
-		</div>
+	
+      
 		<div class='form-group' style="display:none">
 			<label class="col-sm-12"><?php echo $objLbl->getLabel("t_assign","receiveBy","th").":" ?></label>
 			<div class="col-sm-12">
 			    <select id="obj_receiveBy" class="select2" style="width:100%"></select>
 			</div>
 		</div>
-		<div class='form-group'>
+		<div class='form-group' style="display:none">
 			<label class="col-sm-12"><?php echo $objLbl->getLabel("t_assign","duration","th").":" ?></label>
 			<div class="col-sm-12">
 				<table width="100%">
@@ -84,20 +99,39 @@ $rootPath=$cnf->path;
 		</div>
 </div>
 </div>
-<div class="col-sm-6">
-    <div class="box box-success">
-    <table id="tbStaffWork" class="table table-bordered table-hover">
+</div>
+<div class="cols-sm-12">&nbsp;
+</div>
+<div class="row">
 
-    </table>
+<div class="col-sm-12">
+<div class="box box-success">
+  <h4><label class="col-sm-12">มอบหมายให้</label></h4>
+
+  <div>
+    <label class="col-sm-2">กลุ่มงาน</label>
+    <div class="col-sm-10">
+    <select class="form-control" id="obj_issueType"></select>
     </div>
+  </div>
+  <div class="cols-sm-12">&nbsp;
+  </div>  
+  <div class="cols-sm-12">
+   <table id="tbStaffWork" class="table table-bordered table-hover">
+
+   </table>
+   </div>
+
 </div>
 </div>
+</div>
+
 
 
 
 
 <script>
-	var rootPath='<?php echo $rootPath; ?>';
+	var rootPath='<?=$rootPath?>';
   var regDec = /^\d+(\.\d{1,2})?$/;
 	var regEmail=/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 	var regTel=/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g;
@@ -200,7 +234,7 @@ $rootPath=$cnf->path;
     jsonObj={
       issueId:$("#obj_id").val(),
       fixProblem:'',
-      assignFrom:$("#obj_assignFrom").val(),
+      assignFrom:$("#obj_assignFrom").text(),
       receiveBy:$("#obj_receiveBy").val(),
       startDate:$("#obj_startDate").val(),
       deuDate:$("#obj_deuDate").val(),
@@ -209,7 +243,6 @@ $rootPath=$cnf->path;
       status:"02"
     }
     var jsonData=JSON.stringify (jsonObj);
-    console.log(jsonData);
     var flag=executeData(url,jsonObj,false);
     flag &=saveAssignIteration();
     return flag;
@@ -219,7 +252,7 @@ function updateAssign(){
     jsonObj={
       issueId:$("#obj_id").val(),
       fixProblem:'',
-      assignFrom:$("#obj_assignFrom").val(),
+      assignFrom:$("#obj_assignFrom").text(),
       receiveBy:$("#obj_receiveBy").val(),
       startDate:$("#obj_startDate").val(),
       deuDate:$("#obj_deuDate").val(),
@@ -242,7 +275,6 @@ function updateStatus(){
 }
 
 function notifyAssigned(userCode){
-    //var url="<?=$rootPath?>/lineBot/notifyAssignJob.php?assignTo="+$("#obj_receiveBy").val()+"&id="+$("#obj_id").val();
     var url="<?=$rootPath?>/lineBot/notifyAssignJob.php?assignTo="+userCode+"&id="+$("#obj_id").val();
     var data=executeGet(url);
 }
@@ -355,18 +387,29 @@ function formatDate(dateObj,format)
   $("#obj_deuDate").val(finish);
  }
 
+  function listIssueType(){
+    var url="<?=$rootPath?>/tissuetype/getData.php";
+    setDDLPrefix(url,"#obj_issueType","***ประเภทงาน***");
+  }
+
 
  function displayStaffWork(){
-    var url="<?=$rootPath?>/tstaff/chooseStaff.php";
+    var url="<?=$rootPath?>/tstaff/chooseStaff.php?issueType="+$("#obj_issueType").val();
+    console.log(url);
     $("#tbStaffWork").load(url);
  }
 	
 	$(document).ready(function(){
+      listIssueType()
 		  listStaff();
     	listReceiveStatus();
-      displayStaffWork();
     	setDate();
       loadIssue();
+      displayStaffWork();
+
+      $("#obj_issueType").change(function(){
+          displayStaffWork();
+      });
 		
 	})
 	

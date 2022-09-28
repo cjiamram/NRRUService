@@ -1,8 +1,7 @@
 <?php
-include_once "../config/config.php";
-include_once "../lib/classAPI.php";
 include_once "../config/database.php";
 include_once "../objects/classLabel.php";
+include_once "../objects/tissue.php";
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: html/text; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
@@ -10,38 +9,70 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type,Access-Control-Allow-Headers, Authorization, X-Requested-With");
 $database = new Database();
 $db = $database->getConnection();
+$obj=new tissue($db);
 $objLbl = new ClassLabel($db);
-$cnf=new Config();
 $status=isset($_GET["status"])?$_GET["status"]:"01";
-
+$data=array();
 if(isset($_GET["isSearch"])){
 
 	$keyWord=isset($_GET["keyWord"])?$_GET["keyWord"]:"";
 	$issueType=isset($_GET["issueType"])?$_GET["issueType"]:"";
 	$requestDate=isset($_GET["requestDate"])?$_GET["requestDate"]:"";
-	$path="tissue/getRequestByAdvanceStatus.php?status=".$status."&keyWord=".$keyWord."&issueType=".$issueType."&requestDate=".$requestDate;
+
+	$stmt = $obj->getRequestByAdvanceStatus($status,$keyWord,$issueType,$requestDate);
+	$num = $stmt->rowCount();
+	if($um>0){
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				extract($row);
+				$objItem=array(
+					"id"=>$id,
+					"location"=>$Location,
+					"contact"=>"Tel:".$telNo." Line:".$lineNo,
+					"issueType"=>$issueType,
+					"issueDetail"=>$issueDetail,
+					"notifyBy"=>$notifyBy,
+					"status"=>$status,
+					"createDate"=>Format::getTextDate($createDate)
+				);
+				array_push($data, $objItem);
+			}
+	}
+
+
 }else{
-	$path="tissue/getRequestByStatus.php?status=".$status;
+	$stmt = $obj->getRequestByStatus($status);
+	$num = $stmt->rowCount();
+	if($num>0){
+		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+				extract($row);
+				$objItem=array(
+					"id"=>$id,
+					"location"=>$Location,
+					"contact"=>"Tel:".$telNo." Line:".$lineNo,
+					"issueType"=>$issueType,
+					"issueDetail"=>$issueDetail,
+					"notifyBy"=>$notifyBy,
+					"status"=>$status,
+					"createDate"=>Format::getTextDate($createDate)
+				);
+				array_push($data, $objItem);
+			}
+	}
 }
 
 
 
-$url=$cnf->restURL.$path;
-$api=new ClassAPI();
 
-
-$data=$api->getAPI($url);
 echo "<thead>";
 		echo "<tr>";
 			echo "<th>No.</th>";
 			echo "<th width='20%'>".$objLbl->getLabel("t_issue","createDate","TH")."-".$objLbl->getLabel("t_issue","notifyBy","TH")."</th>";
-			echo "<th>".$objLbl->getLabel("t_issue","location","TH")."-".$objLbl->getLabel("t_issue","contact","TH")."</th>";
-			echo "<th>".$objLbl->getLabel("t_issue","issueType","TH")."</th>";
-			echo "<th width='300px'>".$objLbl->getLabel("t_issue","issueDetail","TH")."</th>";
-			echo "<th>".$objLbl->getLabel("t_issue","status","TH")."</th>";
+			echo "<th>".$objLbl->getLabel("t_issue","location","TH")."-".$objLbl->getLabel("t_issue","status","TH")."</th>";
+			echo "<th>".$objLbl->getLabel("t_issue","issueType","TH")."/".$objLbl->getLabel("t_issue","issueDetail","TH")."</th>";
+			//echo "<th width='300px'>".$objLbl->getLabel("t_issue","issueDetail","TH")."</th>";
 		echo "</tr>";
 echo "</thead>";
-if(!isset($data["message"])){
+if(count($data)>0){
 echo "<tbody>";
 $i=1;
 foreach ($data as $row) {
@@ -63,12 +94,16 @@ foreach ($data as $row) {
 			$strContact.='<div class=\'col-sm-12\'>';
 			$strContact.='<div>'.$row["contact"].'</div>';
 			$strContact.='</div>';
+			$strContact.="<div class='col-sm-12'>\n";
+			$strContact.="<div><label style='color:red'>สถานะ :".$row["status"]."</label></div>\n";
+			$strContact.="</div>\n";
 
 			echo '<td>'.$strContact.'</td>';
-			echo '<td width=\'200px\'>'.$row["issueType"].'</td>';
-			echo '<td><div style="min-height:100px;max-height:300px;overflow:scroll;">'.$row["issueDetail"].'</div></td>';
-
-			echo '<td>'.$row["status"].'</td>';
+			$strT="<table width='100%'>\n";
+			$strT.="<tr><td>".$row["issueType"]."</td></tr>\n";
+			$strT.="<tr><td><div style='width:100%;min-height:100px;max-height:300px;overflow:scroll;'>".$row["issueDetail"]."</div></td></tr>\n";
+			$strT.="</table>\n";
+			echo "<td>".$strT."</td>\n";
 			echo "</tr>";
 }
 echo "</tbody>";
